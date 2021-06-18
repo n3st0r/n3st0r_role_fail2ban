@@ -1,0 +1,36 @@
+---
+
+- name: Ensure package fail2ban is installed
+  ansible.builtin.apt:
+    name: fail2ban
+    state: latest
+    update_cache: yes
+    cache_valid_time: 3600
+  tags:
+    - fail2ban
+
+
+- name: Prepare configuration /etc/fail2ban/fail2ban.conf
+  ansible.builtin.template:
+    src: etc/fail2ban/fail2ban.conf.j2
+    dest: /etc/fail2ban/fail2ban.conf
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart fail2ban
+  tags:
+    - fail2ban
+
+
+- name: Prepare configuration /etc/fail2ban/jail.conf
+  ansible.builtin.template:
+    src: etc/fail2ban/jail.local.j2
+    dest: /etc/fail2ban/jail.local
+    owner: root
+    group: root
+    mode: 0644
+  notify:
+    - restart fail2ban
+  tags:
+    - fail2ban
